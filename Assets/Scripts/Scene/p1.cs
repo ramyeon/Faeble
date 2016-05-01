@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class p1 : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+	returnBut returnButScript;
 	
+	void Awake () {
+		returnButScript = (returnBut) FindObjectOfType(typeof(returnBut));
 	}
 	
 	// Update is called once per frame
@@ -16,6 +16,7 @@ public class p1 : MonoBehaviour {
 			if (Physics.Raycast(ray, out hit))
 			{
 				if (hit.transform.gameObject.name == "p1") {
+					returnButScript.scene = 0;
 					Application.LoadLevel("replay");				
 				} 
 			}

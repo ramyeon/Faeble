@@ -2,13 +2,14 @@
 using System.Collections;
 
 public class returnBut : MonoBehaviour {
-	void Start() {
-		
+	public int scene = 0;
+	void Awake() {
+		DontDestroyOnLoad(transform.gameObject);
 	}
-
+	
 	// Use this for initialization
 	public void backToMain() {
-		Debug.Log("Mouse down");
+		Debug.Log("Going back to main scene");
 		Application.LoadLevel("main");
 	}
 }

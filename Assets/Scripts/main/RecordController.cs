@@ -22,6 +22,10 @@ public class RecordController : MonoBehaviour {
 	public bool changeSc = false;
 	public IEnumerable<TrackableBehaviour> activeTrackables;
 	public string outstr = "";
+	public AudioClip myAudioClip;
+	public SoundManager soundmanager;
+	private int count = 1;
+	public GameObject persistent;
 	
 	
 	// Use this for initialization
@@ -35,10 +39,19 @@ public class RecordController : MonoBehaviour {
 		if (isRecording) {
 			recordButton.image.sprite = stop;
 			Debug.Log(Application.persistentDataPath);
-			sw = new StreamWriter (Application.persistentDataPath + "out.txt", false);
+			myAudioClip = Microphone.Start(null,false,60,44100);
+			if (count == 0) {
+				count = 1;
+			} else {
+				count = 0;
+			}
+			sw = new StreamWriter (Application.persistentDataPath + "out" + count.ToString() + ".txt", false);
 			InvokeRepeating ("record", (float)0.01, (float)0.05);
 		}
 		else {
+			Microphone.End(null);
+			soundmanager = persistent.GetComponent<SoundManager>();
+			soundmanager.audiop = myAudioClip;
 			recordButton.image.sprite = play;
 			sw.Close ();
 			CancelInvoke("record");

@@ -22,14 +22,26 @@ public class PlayRecording : MonoBehaviour {
 	public bool pikActive = false;
 	public bool artActive = false;
 	public bool ninActive = false;
-	public KeyValuePair<Vector3,Quaternion> pikFinal;
-	public KeyValuePair<Vector3,Quaternion> artFinal;
-	public KeyValuePair<Vector3,Quaternion> ninFinal;
 	public int count = 1;
+	public AudioClip clip;
+	public AudioSource audio;
+	public SoundManager soundmanager;
+	public returnBut returnButScript;
 
 	// Use this for initialization
 	void Start () {
-		infile =  Application.persistentDataPath + "out.txt";
+		audio = GetComponent<AudioSource>();
+		
+		returnButScript = (returnBut) FindObjectOfType(typeof(returnBut));
+		if (returnButScript.scene == 0) {
+			infile =  Application.persistentDataPath + "out0.txt";
+			Debug.Log("Loading from 0");
+		} else {
+			Debug.Log("Loading from 1");
+			infile =  Application.persistentDataPath + "out1.txt";
+		}
+		
+		//infile =  Application.persistentDataPath + "out0.txt";
 		play.onClick.AddListener (beginAnimation);
 		exit.onClick.AddListener (exitScene);
 	}
@@ -78,9 +90,13 @@ public class PlayRecording : MonoBehaviour {
 	}
 
 	void beginAnimation(){
+		SoundManager soundmanager = GameObject.FindGameObjectWithTag("persistent").GetComponent<SoundManager>();
+		clip = soundmanager.audiop;
+		audio.clip = clip;
 		if (!isPlaying) {
 			sr = new StreamReader (infile);
 			isPlaying = true;
+			audio.Play();
 			if (!sr.EndOfStream) {
 				line = sr.ReadLine ();
 				currentFrame = line.Split (';');
@@ -129,6 +145,7 @@ public class PlayRecording : MonoBehaviour {
 				Debug.Log (QuatFromString(currentModel[2]).ToString());
 			}
 		} else {
+			audio.Stop();
 			Debug.Log("null");
 			isPlaying = false;
 			sr.Close ();
